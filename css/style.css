@@ -69,3 +69,23 @@ button {
 button:hover {
   opacity: 0.8;
 }
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+form input {
+  margin-bottom: 15px;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+form button {
+  padding: 10px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
