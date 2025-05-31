@@ -42,3 +42,29 @@
   </div>
 </body>
 </html>
+<script src="js/app.js"></script>
+// Kullanıcı listesi sayfası için
+document.addEventListener("DOMContentLoaded", function () {
+  if (window.location.pathname.includes("users.html")) {
+    const tbody = document.querySelector("tbody");
+    const kullanicilar = JSON.parse(localStorage.getItem("kullanicilar")) || [];
+
+    tbody.innerHTML = ""; // Önce temizle
+
+    kullanicilar.forEach((kullanici, index) => {
+      const tr = document.createElement("tr");
+
+      tr.innerHTML = `
+        <td>${index + 1}</td>
+        <td>${kullanici.adSoyad}</td>
+        <td>${kullanici.email}</td>
+        <td>
+          <button>Düzenle</button>
+          <button>Sil</button>
+        </td>
+      `;
+
+      tbody.appendChild(tr);
+    });
+  }
+});
