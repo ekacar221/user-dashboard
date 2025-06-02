@@ -19,52 +19,12 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>1</td>
-          <td>Ali Yılmaz</td>
-          <td>ali@example.com</td>
-          <td>
-            <button>Düzenle</button>
-            <button>Sil</button>
-          </td>
-        </tr>
-        <tr>
-          <td>2</td>
-          <td>Ayşe Demir</td>
-          <td>ayse@example.com</td>
-          <td>
-            <button>Düzenle</button>
-            <button>Sil</button>
-          </td>
-        </tr>
+        <!-- JavaScript ile eklenecek -->
       </tbody>
     </table>
   </div>
+
+  <!-- JS dosyasını body kapanışından hemen önce çağır -->
+  <script src="js/app.js"></script>
 </body>
 </html>
-<script src="js/app.js"></script>
-// Kullanıcı listesi sayfası için
-document.addEventListener("DOMContentLoaded", function () {
-  if (window.location.pathname.includes("users.html")) {
-    const tbody = document.querySelector("tbody");
-    const kullanicilar = JSON.parse(localStorage.getItem("kullanicilar")) || [];
-
-    tbody.innerHTML = ""; // Önce temizle
-
-    kullanicilar.forEach((kullanici, index) => {
-      const tr = document.createElement("tr");
-
-      tr.innerHTML = `
-        <td>${index + 1}</td>
-        <td>${kullanici.adSoyad}</td>
-        <td>${kullanici.email}</td>
-        <td>
-          <button>Düzenle</button>
-          <button>Sil</button>
-        </td>
-      `;
-
-      tbody.appendChild(tr);
-    });
-  }
-});

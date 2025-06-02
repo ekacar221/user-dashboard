@@ -68,3 +68,15 @@ document.addEventListener("DOMContentLoaded", function () {
     listeyiGoster();
   }
 });
+// Sil butonlarının hemen altına ekle
+// Düzenle butonu
+const duzenleButonlari = document.querySelectorAll(".duzenle-btn");
+duzenleButonlari.forEach(button => {
+  button.addEventListener("click", function () {
+    const i = this.getAttribute("data-index");
+
+    // Düzenlenecek kullanıcıyı geçici olarak sakla
+    localStorage.setItem("duzenlenecekIndex", i);
+    window.location.href = "form.html";
+  });
+});
