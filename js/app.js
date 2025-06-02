@@ -1,37 +1,47 @@
 document.addEventListener("DOMContentLoaded", function () {
-  const form = document.getElementById("userForm");
+  const path = window.location.pathname;
 
-  form.addEventListener("submit", function (e) {
-    e.preventDefault();
+  // 📄 FORM.HTML → Kullanıcı ekleme veya düzenleme
+  if (path.includes("form.html")) {
+    const form = document.getElementById("userForm");
+    const kullanicilar = JSON.parse(localStorage.getItem("kullanicilar")) || [];
+    const duzenlenecekIndex = localStorage.getItem("duzenlenecekIndex");
 
-    const adSoyad = form.querySelector("input[type='text']").value;
-    const email = form.querySelector("input[type='email']").value;
-    const telefon = form.querySelector("input[type='tel']").value;
+    // Eğer düzenleme modundaysa, formu doldur
+    if (duzenlenecekIndex !== null) {
+      const kullanici = kullanicilar[duzenlenecekIndex];
+      form.querySelector("input[type='text']").value = kullanici.adSoyad;
+      form.querySelector("input[type='email']").value = kullanici.email;
+      form.querySelector("input[type='tel']").value = kullanici.telefon;
+    }
 
-    const yeniKullanici = {
-      adSoyad,
-      email,
-      telefon
-    };
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
 
-    // Mevcut kullanıcıları al
-    let kullanicilar = JSON.parse(localStorage.getItem("kullanicilar")) || [];
+      const adSoyad = form.querySelector("input[type='text']").value;
+      const email = form.querySelector("input[type='email']").value;
+      const telefon = form.querySelector("input[type='tel']").value;
 
-    // Yeni kullanıcıyı ekle
-    kullanicilar.push(yeniKullanici);
+      const yeniKullanici = { adSoyad, email, telefon };
 
-    // Güncellenmiş listeyi kaydet
-    localStorage.setItem("kullanicilar", JSON.stringify(kullanicilar));
+      if (duzenlenecekIndex !== null) {
+        // Güncelleme
+        kullanicilar[duzenlenecekIndex] = yeniKullanici;
+        localStorage.removeItem("duzenlenecekIndex");
+      } else {
+        // Yeni ekleme
+        kullanicilar.push(yeniKullanici);
+      }
 
-    // Temizle ve yönlendir
-    form.reset();
-    alert("Kullanıcı kaydedildi!");
-    window.location.href = "users.html";
-  });
-});
-// Kullanıcı listesi sayfası için
-document.addEventListener("DOMContentLoaded", function () {
-  if (window.location.pathname.includes("users.html")) {
+      localStorage.setItem("kullanicilar", JSON.stringify(kullanicilar));
+
+      alert("Kullanıcı kaydedildi!");
+      window.location.href = "users.html";
+    });
+  }
+
+  // 📄 USERS.HTML → Listeleme, silme, düzenlemeye geçiş
+  if (path.includes("users.html")) {
     const tbody = document.querySelector("tbody");
     let kullanicilar = JSON.parse(localStorage.getItem("kullanicilar")) || [];
 
@@ -46,6 +56,7 @@ document.addEventListener("DOMContentLoaded", function () {
           <td>${kullanici.adSoyad}</td>
           <td>${kullanici.email}</td>
           <td>
+            <button class="duzenle-btn" data-index="${index}">Düzenle</button>
             <button class="sil-btn" data-index="${index}">Sil</button>
           </td>
         `;
@@ -53,30 +64,26 @@ document.addEventListener("DOMContentLoaded", function () {
         tbody.appendChild(tr);
       });
 
-      // Sil butonlarına tıklama olayı
-      const silButonlari = document.querySelectorAll(".sil-btn");
-      silButonlari.forEach(button => {
+      // Silme
+      document.querySelectorAll(".sil-btn").forEach(button => {
         button.addEventListener("click", function () {
           const i = this.getAttribute("data-index");
-          kullanicilar.splice(i, 1); // diziden sil
+          kullanicilar.splice(i, 1);
           localStorage.setItem("kullanicilar", JSON.stringify(kullanicilar));
-          listeyiGoster(); // tabloyu yenile
+          listeyiGoster();
+        });
+      });
+
+      // Düzenleme
+      document.querySelectorAll(".duzenle-btn").forEach(button => {
+        button.addEventListener("click", function () {
+          const i = this.getAttribute("data-index");
+          localStorage.setItem("duzenlenecekIndex", i);
+          window.location.href = "form.html";
         });
       });
     }
 
     listeyiGoster();
   }
-});
-// Sil butonlarının hemen altına ekle
-// Düzenle butonu
-const duzenleButonlari = document.querySelectorAll(".duzenle-btn");
-duzenleButonlari.forEach(button => {
-  button.addEventListener("click", function () {
-    const i = this.getAttribute("data-index");
-
-    // Düzenlenecek kullanıcıyı geçici olarak sakla
-    localStorage.setItem("duzenlenecekIndex", i);
-    window.location.href = "form.html";
-  });
 });
