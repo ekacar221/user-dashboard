@@ -1,3 +1,21 @@
+// Tema geçişi
+const body = document.body;
+const themeToggle = document.getElementById("themeToggle");
+
+if (localStorage.getItem("tema") === "dark") {
+  body.classList.add("dark-mode");
+}
+
+if (themeToggle) {
+  themeToggle.addEventListener("click", () => {
+    body.classList.toggle("dark-mode");
+    const aktifTema = body.classList.contains("dark-mode") ? "dark" : "light";
+    localStorage.setItem("tema", aktifTema);
+  });
+}
+
+
+
 document.addEventListener("DOMContentLoaded", function () {
   const path = window.location.pathname;
 
