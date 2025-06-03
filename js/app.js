@@ -15,7 +15,6 @@ if (themeToggle) {
 }
 
 
-
 document.addEventListener("DOMContentLoaded", function () {
   const path = window.location.pathname;
 
