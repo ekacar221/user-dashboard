@@ -1,13 +1,31 @@
 document.addEventListener("DOMContentLoaded", function () {
   const path = window.location.pathname;
 
-  // 📄 FORM.HTML → Kullanıcı ekleme veya düzenleme
+  // 📄 INDEX.HTML → Giriş kontrolü (admin/1234)
+  if (path.includes("index.html")) {
+    const loginForm = document.getElementById("loginForm");
+
+    loginForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const username = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
+
+      if (username === "admin" && password === "1234") {
+        alert("Giriş başarılı!");
+        window.location.href = "users.html";
+      } else {
+        alert("Hatalı kullanıcı adı veya şifre!");
+      }
+    });
+  }
+
+  // 📄 FORM.HTML → Kullanıcı ekleme/düzenleme
   if (path.includes("form.html")) {
     const form = document.getElementById("userForm");
     const kullanicilar = JSON.parse(localStorage.getItem("kullanicilar")) || [];
     const duzenlenecekIndex = localStorage.getItem("duzenlenecekIndex");
 
-    // Eğer düzenleme modundaysa, formu doldur
     if (duzenlenecekIndex !== null) {
       const kullanici = kullanicilar[duzenlenecekIndex];
       form.querySelector("input[type='text']").value = kullanici.adSoyad;
@@ -25,11 +43,9 @@ document.addEventListener("DOMContentLoaded", function () {
       const yeniKullanici = { adSoyad, email, telefon };
 
       if (duzenlenecekIndex !== null) {
-        // Güncelleme
         kullanicilar[duzenlenecekIndex] = yeniKullanici;
         localStorage.removeItem("duzenlenecekIndex");
       } else {
-        // Yeni ekleme
         kullanicilar.push(yeniKullanici);
       }
 
@@ -40,7 +56,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // 📄 USERS.HTML → Listeleme, silme, düzenlemeye geçiş
+  // 📄 USERS.HTML → Listeleme, silme, düzenleme
   if (path.includes("users.html")) {
     const tbody = document.querySelector("tbody");
     let kullanicilar = JSON.parse(localStorage.getItem("kullanicilar")) || [];
