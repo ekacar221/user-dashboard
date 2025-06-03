@@ -1,24 +1,23 @@
-// Tema geçişi
-const body = document.body;
-const themeToggle = document.getElementById("themeToggle");
-
-if (localStorage.getItem("tema") === "dark") {
-  body.classList.add("dark-mode");
-}
-
-if (themeToggle) {
-  themeToggle.addEventListener("click", () => {
-    body.classList.toggle("dark-mode");
-    const aktifTema = body.classList.contains("dark-mode") ? "dark" : "light";
-    localStorage.setItem("tema", aktifTema);
-  });
-}
-
-
 document.addEventListener("DOMContentLoaded", function () {
   const path = window.location.pathname;
 
-  // 📄 INDEX.HTML → Giriş kontrolü (admin/1234)
+  // 🌙 Tema geçişi (her sayfa için)
+  const body = document.body;
+  const themeToggle = document.getElementById("themeToggle");
+
+  if (localStorage.getItem("tema") === "dark") {
+    body.classList.add("dark-mode");
+  }
+
+  if (themeToggle) {
+    themeToggle.addEventListener("click", () => {
+      body.classList.toggle("dark-mode");
+      const aktifTema = body.classList.contains("dark-mode") ? "dark" : "light";
+      localStorage.setItem("tema", aktifTema);
+    });
+  }
+
+  // 📄 INDEX.HTML → Giriş kontrolü + şifre göster/gizle
   if (path.includes("index.html")) {
     const loginForm = document.getElementById("loginForm");
 
@@ -35,6 +34,16 @@ document.addEventListener("DOMContentLoaded", function () {
         alert("Hatalı kullanıcı adı veya şifre!");
       }
     });
+
+    // 👁️ Şifre göster/gizle
+    const showPassword = document.getElementById("showPassword");
+    const passwordInput = document.getElementById("password");
+
+    if (showPassword && passwordInput) {
+      showPassword.addEventListener("change", function () {
+        passwordInput.type = this.checked ? "text" : "password";
+      });
+    }
   }
 
   // 📄 FORM.HTML → Kullanıcı ekleme/düzenleme
