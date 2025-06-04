@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
   const path = window.location.pathname;
 
-  // 🌙 Tema geçişi (her sayfa için)
+  // 🌙 Tema geçişi
   const body = document.body;
   const themeToggle = document.getElementById("themeToggle");
 
@@ -82,15 +82,16 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // 📄 USERS.HTML → Listeleme, silme, düzenleme
+  // 📄 USERS.HTML → Listeleme, silme, düzenleme, arama
   if (path.includes("users.html")) {
     const tbody = document.querySelector("tbody");
+    const searchInput = document.getElementById("searchInput");
     let kullanicilar = JSON.parse(localStorage.getItem("kullanicilar")) || [];
 
-    function listeyiGoster() {
+    function listeyiGoster(liste = kullanicilar) {
       tbody.innerHTML = "";
 
-      kullanicilar.forEach((kullanici, index) => {
+      liste.forEach((kullanici, index) => {
         const tr = document.createElement("tr");
 
         tr.innerHTML = `
@@ -98,15 +99,19 @@ document.addEventListener("DOMContentLoaded", function () {
           <td>${kullanici.adSoyad}</td>
           <td>${kullanici.email}</td>
           <td>
-            <button class="duzenle-btn" data-index="${index}">Düzenle</button>
-            <button class="sil-btn" data-index="${index}">Sil</button>
+            <button class="duzenle-btn" data-index="${kullanicilar.indexOf(kullanici)}">Düzenle</button>
+            <button class="sil-btn" data-index="${kullanicilar.indexOf(kullanici)}">Sil</button>
           </td>
         `;
 
         tbody.appendChild(tr);
       });
 
-      // Silme
+      // Buton olayları yeniden bağlanmalı:
+      aktifEt();
+    }
+
+    function aktifEt() {
       document.querySelectorAll(".sil-btn").forEach(button => {
         button.addEventListener("click", function () {
           const i = this.getAttribute("data-index");
@@ -116,7 +121,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
       });
 
-      // Düzenleme
       document.querySelectorAll(".duzenle-btn").forEach(button => {
         button.addEventListener("click", function () {
           const i = this.getAttribute("data-index");
@@ -126,6 +130,22 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     }
 
-    listeyiGoster();
+    // Arama kutusu dinle
+    if (searchInput) {
+      searchInput.addEventListener("input", function () {
+        const filtre = this.value.toLowerCase();
+
+        const filtrelenmis = kullanicilar.filter(kullanici => {
+          return (
+            kullanici.adSoyad.toLowerCase().includes(filtre) ||
+            kullanici.email.toLowerCase().includes(filtre)
+          );
+        });
+
+        listeyiGoster(filtrelenmis);
+      });
+    }
+
+    listeyiGoster(); // ilk yükleme
   }
 });
